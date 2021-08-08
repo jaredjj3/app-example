@@ -1,4 +1,5 @@
 import { Options, UnderscoreNamingStrategy } from '@mikro-orm/core';
+import { Post, PostTag, Tag, User } from './entities';
 
 export const config: Options = {
   type: 'postgresql',
@@ -8,7 +9,7 @@ export const config: Options = {
   user: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   namingStrategy: UnderscoreNamingStrategy,
-  entities: [],
+  entities: [User, Post, Tag, PostTag],
   tsNode: true,
   discovery: {
     requireEntitiesArray: false,

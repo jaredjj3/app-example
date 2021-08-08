@@ -1,4 +1,5 @@
 import { MikroORM } from '@mikro-orm/core';
+import { Post, PostTag, Tag, User } from './entities';
 import { config } from './mikro-orm.config';
 
 export class Db {
@@ -39,7 +40,10 @@ export class Db {
   }
 
   async cleanup() {
-    // TODO(jared) Add entities to delete here.
+    await this.orm.em.nativeDelete(User, {});
+    await this.orm.em.nativeDelete(Post, {});
+    await this.orm.em.nativeDelete(Tag, {});
+    await this.orm.em.nativeDelete(PostTag, {});
     this.orm.em.clear();
   }
 }
