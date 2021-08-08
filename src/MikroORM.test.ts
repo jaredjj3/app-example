@@ -6,11 +6,17 @@ import * as rand from './testing/rand';
 describe('mikro-orm', () => {
   let db: Db;
   let em: EntityManager;
+  let executeQuerySpy: jest.SpyInstance;
 
   beforeEach(async () => {
     db = Db.instance;
     em = db.em;
+    // executeQuery is protected
+    // https://github.com/mikro-orm/mikro-orm/blob/44998383b21a3aef943a922a3e75426369178f35/packages/core/src/connections/Connection.ts#L95
+    executeQuerySpy = jest.spyOn(db.orm.em.getConnection() as any, 'executeQuery');
   });
+
+  const getNumDbCalls = () => executeQuerySpy.mock.calls.length;
 
   describe('CRUD', () => {
     it('allows creating valid User entities', async () => {
@@ -100,7 +106,7 @@ describe('mikro-orm', () => {
       await em.flush();
       em.clear();
 
-      const post = new Post({ authorId: user.id });
+      const post = new Post({ title: rand.str(8), authorId: user.id });
       em.persist(post);
       await em.flush();
       em.clear();
@@ -113,6 +119,56 @@ describe('mikro-orm', () => {
       expect(actualPost!.author).toBeDefined();
       expect(actualPost!.author!.id).toBe(user.id);
       expect(actualPost!.authorId).toBe(user.id);
+    });
+
+    it('can load an association made by a reference', async () => {
+      const post = new Post({ title: rand.str(8) });
+      const user = new User({ username: rand.str(8) });
+      post.author = wrap(user).toReference();
+
+      em.persist(user);
+      em.persist(post);
+      await em.flush();
+      em.clear();
+
+      await expect(em.count(Post)).resolves.toBe(1);
+      await expect(em.count(User)).resolves.toBe(1);
+
+      // Assert that we have a brand new post entity.
+      const actualPost = await em.findOne(Post, { authorId: user.id }, { populate: { author: LoadStrategy.JOINED } });
+      expect(actualPost).not.toBeNull();
+      expect(actualPost).not.toBe(post);
+
+      // Assert that we can load the author association and it doesn't trigger
+      // a database call since it was joined.
+      const prevNumDbCalls = getNumDbCalls();
+      await expect(actualPost!.author.load()).resolves.not.toThrow();
+      const currNumDbCalls = getNumDbCalls();
+      expect(currNumDbCalls - prevNumDbCalls).toBe(0);
+    });
+
+    it('can load an association made by a foreign key', async () => {
+      // Create a new user and clear cache to simulate a "clean slate".
+      const user = new User({ username: rand.str(8) });
+      em.persist(user);
+      await em.flush();
+      em.clear();
+
+      const post = new Post({ title: rand.str(8), authorId: user.id });
+      em.persist(post);
+      await em.flush();
+      em.clear();
+
+      // Assert that we have a brand new post entity.
+      const actualPost = await em.findOne(Post, { authorId: user.id }, { populate: { author: LoadStrategy.JOINED } });
+      expect(actualPost).not.toBeNull();
+
+      // Assert that we can load the author association and it doesn't trigger
+      // a database call since it was joined.
+      const prevNumDbCalls = getNumDbCalls();
+      await expect(actualPost!.author.load()).resolves.not.toThrow();
+      const currNumDbCalls = getNumDbCalls();
+      expect(currNumDbCalls - prevNumDbCalls).toBe(0);
     });
 
     it('disallows creating with invalid relationships', async () => {

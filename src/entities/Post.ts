@@ -29,12 +29,18 @@ export class Post extends Base {
   @IsNotEmpty()
   author?: IdentifiedReference<User, 'id'>;
 
+  @Property({ persist: false })
   get authorId() {
     return this.author?.id;
   }
 
   set authorId(authorId: number) {
-    const author = wrap(new User({ id: authorId }));
+    if (this.author?.id === authorId) {
+      // It's already associated, don't change anything.
+      return;
+    }
+    const author = wrap(new User({ id: authorId }), true);
+    author.__initialized = false;
     this.author = author.toReference();
   }
 
