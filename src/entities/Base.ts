@@ -20,7 +20,7 @@ export abstract class Base {
 
   async errors(): Promise<string[]> {
     const errors = await validate(this);
-    return errors.flatMap((error) => Object.values(error.constraints || []));
+    return errors.flatMap((error) => (error.constraints ? Object.values(error.constraints) : []));
   }
 
   @BeforeCreate()
