@@ -1,8 +1,19 @@
 import { MikroORM, UnderscoreNamingStrategy } from 'mikro-orm';
 
 export class Db {
+  private static instanceRef: Db | undefined;
+
+  static get instance() {
+    if (typeof Db.instanceRef === 'undefined') {
+      this.instanceRef = new Db();
+    }
+    return this.instanceRef;
+  }
+
   private didInit = false;
   private ormRef: MikroORM;
+
+  private constructor() {}
 
   async init() {
     if (this.didInit) {
