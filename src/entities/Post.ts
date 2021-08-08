@@ -7,9 +7,9 @@ import {
   OneToMany,
   PrimaryKey,
   Property,
-  wrap,
 } from '@mikro-orm/core';
 import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import { createReferenceForDirectFkAssignment } from '../hacks/HACK_ISSUE_2099';
 import { Base } from './Base';
 import { PostTag } from './PostTag';
 import { Tag } from './Tag';
@@ -35,13 +35,8 @@ export class Post extends Base {
   }
 
   set authorId(authorId: number) {
-    if (this.author?.id === authorId) {
-      // It's already associated, don't change anything.
-      return;
-    }
-    const author = wrap(new User({ id: authorId }), true);
-    author.__initialized = false;
-    this.author = author.toReference();
+    this.author =
+      this.author?.id === authorId ? this.author : createReferenceForDirectFkAssignment(new User({ id: authorId }));
   }
 
   @OneToMany(() => PostTag, (postTag) => postTag.post)
