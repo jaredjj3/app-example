@@ -127,6 +127,18 @@ describe('mikro-orm', () => {
       await expect(em.count(Post)).resolves.toBe(0);
       await expect(em.count(User)).resolves.toBe(0);
     });
+
+    it('disallows missing relationships marked as required', async () => {
+      // Posts must have an author.
+      const post = new Post({ title: rand.str(8) });
+      await expect(post.isValid()).resolves.toBeFalse();
+
+      em.persist(post);
+      await expect(em.flush()).rejects.toThrow(ValidationError);
+
+      await expect(em.count(Post)).resolves.toBe(0);
+      await expect(em.count(User)).resolves.toBe(0);
+    });
   });
 
   describe('"has many" relationships', () => {
