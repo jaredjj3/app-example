@@ -80,7 +80,7 @@ describe('mikro-orm', () => {
   });
 
   describe('"belongs to" relationships', () => {
-    it('allows creation using a reference', async () => {
+    it('allows creating using a reference', async () => {
       const post = new Post({ title: rand.str(8) });
       const user = new User({ username: rand.str(8) });
       post.author = wrap(user).toReference();
@@ -94,10 +94,38 @@ describe('mikro-orm', () => {
       expect(user.posts.contains(post)).toBeTrue();
     });
 
-    it('disallows persisting with invalid relationships', async () => {
+    it('disallows creating with invalid relationships', async () => {
       const post = new Post({ title: rand.str(8) });
       const user = new User();
       post.author = wrap(user).toReference();
+
+      em.persist(post);
+      await expect(em.flush()).rejects.toThrow(ValidationError);
+
+      await expect(em.count(Post)).resolves.toBe(0);
+      await expect(em.count(User)).resolves.toBe(0);
+    });
+  });
+
+  describe('"has many" relationships', () => {
+    it('allows creating using a reference', async () => {
+      const post = new Post({ title: rand.str(8) });
+      const user = new User({ username: rand.str(8) });
+      user.posts.add(post);
+
+      em.persist(post);
+      await em.flush();
+
+      await expect(em.count(Post)).resolves.toBe(1);
+      await expect(em.count(User)).resolves.toBe(1);
+      expect(post.author.getEntity()).toBe(user);
+      expect(user.posts.contains(post)).toBeTrue();
+    });
+
+    it('disallows creating with invalid relationships', async () => {
+      const post = new Post({ title: rand.str(8) });
+      const user = new User();
+      user.posts.add(post);
 
       em.persist(post);
       await expect(em.flush()).rejects.toThrow(ValidationError);
