@@ -1,6 +1,10 @@
 import { Db } from '../Db';
 
-const db = Db.instance;
+let db: Db;
+
+beforeAll(() => {
+  db = Db.instance;
+});
 
 beforeAll(async () => {
   await db.init();

@@ -1,4 +1,4 @@
-import { MikroORM } from '@mikro-orm/core';
+import { EntityManager, MikroORM } from '@mikro-orm/core';
 import { Post, PostTag, Tag, User } from './entities';
 import { config } from './mikro-orm.config';
 
@@ -30,6 +30,10 @@ export class Db {
       throw new Error('must call Db.init before accessing Db.orm');
     }
     return this._orm;
+  }
+
+  get em(): EntityManager {
+    return this.orm.em;
   }
 
   async close() {

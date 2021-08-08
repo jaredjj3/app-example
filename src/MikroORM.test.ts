@@ -1,5 +1,9 @@
+import { Db } from './Db';
+
 describe('mikro-orm', () => {
-  it('fails', () => {
-    fail('this is supposed to happen');
+  let db: Db;
+
+  beforeEach(async () => {
+    db = Db.instance;
   });
 });
