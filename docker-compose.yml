@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  db:
+    container_name: db
+    image: postgres:11
+    restart: always
+    environment:
+      POSTGRES_DB: appexample
+      POSTGRES_USER: appexample
+      POSTGRES_PASSWORD: appexample
+
+  test:
+    container_name: test
+    image: app-example:latest
+    volumes:
+      - ./src:/app/src
+    links:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: appexample
+      DB_USERNAME: appexample
+      DB_PASSWORD: appexample

@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "test": "docker-compose run --name test --rm test; docker-compose down"
+  },
   "dependencies": {
     "@types/jest": "^26.0.24",
     "@typescript-eslint/eslint-plugin": "^4.29.0",
