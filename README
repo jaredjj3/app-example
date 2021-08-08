@@ -1,6 +1,7 @@
 # app-example
 
-The purpose of this repository is to test the understanding of the MikroORM library.
+The purpose of this repository is to test the understanding of the MikroORM library. This is also intended
+to be a template for making example repositories for MikroORM bug issues.
 
 ## Prerequisites
 
@@ -31,3 +32,25 @@ yarn debug
 ```
 
 Inside the container, you will have access to the MikrORM CLI via `yarn mikro-orm`.
+
+## Schema
+
+This example uses a classic relational example that encompasses all types of relationships. There are 4 entities:
+
+- `User`
+- `Post`
+- `PostTag`
+- `Tag`
+
+The relationships between the entities are:
+
+- A `User` has many `posts` (`Post`)
+- A `Post` belongs to an `author` (`User`)
+- A `Post` has many `postTags` (`PostTag`)
+- A `Post` has many `tags` (`Tag`) through `postTags` (`PostTag`)
+- A `PostTag` belongs to a `post` (`Post`)
+- A `PostTag` belongs to a `tag` (`Tag`)
+- A `Tag` has many `postTags` (`PostTag`)
+- A `Tag` has many `posts` (`Post`) through `postTags` (`PostTag`)
+
+It is encouraged to leverage these already-existing relationships instead of trying to replicate your schema directly.
