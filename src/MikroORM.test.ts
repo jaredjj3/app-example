@@ -1,6 +1,6 @@
-import { EntityManager } from '@mikro-orm/core';
+import { EntityManager, wrap } from '@mikro-orm/core';
 import { Db } from './Db';
-import { User } from './entities';
+import { Post, User } from './entities';
 import { ValidationError } from './entities/Base';
 import * as rand from './testing/rand';
 
@@ -76,6 +76,34 @@ describe('mikro-orm', () => {
       expect(actualUser).not.toBeNull();
       expect(actualUser!).not.toBe(user);
       expect(actualUser!.username).toBe(username);
+    });
+  });
+
+  describe('"belongs to" relationships', () => {
+    it('allows creation using a reference', async () => {
+      const post = new Post({ title: rand.str(8) });
+      const user = new User({ username: rand.str(8) });
+      post.author = wrap(user).toReference();
+
+      em.persist(post);
+      await em.flush();
+
+      await expect(em.count(Post)).resolves.toBe(1);
+      await expect(em.count(User)).resolves.toBe(1);
+      expect(post.author.getEntity()).toBe(user);
+      expect(user.posts.contains(post)).toBeTrue();
+    });
+
+    it('disallows persisting with invalid relationships', async () => {
+      const post = new Post({ title: rand.str(8) });
+      const user = new User();
+      post.author = wrap(user).toReference();
+
+      em.persist(post);
+      await expect(em.flush()).rejects.toThrow(ValidationError);
+
+      await expect(em.count(Post)).resolves.toBe(0);
+      await expect(em.count(User)).resolves.toBe(0);
     });
   });
 });

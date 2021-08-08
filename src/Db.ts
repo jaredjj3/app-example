@@ -44,9 +44,9 @@ export class Db {
   }
 
   async cleanup() {
-    await this.orm.em.nativeDelete(User, {});
-    await this.orm.em.nativeDelete(Post, {});
     await this.orm.em.nativeDelete(Tag, {});
+    await this.orm.em.nativeDelete(Post, {});
+    await this.orm.em.nativeDelete(User, {});
     await this.orm.em.nativeDelete(PostTag, {});
     this.orm.em.clear();
   }

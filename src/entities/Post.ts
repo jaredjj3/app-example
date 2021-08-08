@@ -21,7 +21,7 @@ export class Post extends Base {
 
   @Property()
   @MinLength(3)
-  @MaxLength(16)
+  @MaxLength(64)
   title!: string;
 
   @ManyToOne(() => User, { wrappedReference: true })
