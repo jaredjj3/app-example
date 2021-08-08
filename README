@@ -1,3 +1,21 @@
 # app-example
 
 The purpose of this repository is to test the understanding of the MikroORM library.
+
+## Prerequisites
+
+In order to run the tests in this project, you must have:
+
+- [docker](https://docs.docker.com/get-docker/)
+- [docker-compose](https://docs.docker.com/compose/install/)
+- [yarn](https://classic.yarnpkg.com/en/docs/install/)
+
+## Running Tests
+
+Jest will run any tests in src/**/*.test.ts in a Docker container. To run the tests, simply run:
+
+```
+yarn test
+```
+
+To quit out of the tests, you can press `q` (or as the Jest prompt suggests) or by pressing `Ctrl+C`.

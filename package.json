@@ -1,6 +1,10 @@
 {
   "scripts": {
-    "test": "docker-compose run --name test --rm test; docker-compose down"
+    "build": "docker-compose build",
+    "pretest": "yarn build",
+    "test": "docker-compose run --name test --rm test",
+    "posttest": "yarn stop",
+    "stop": "docker-compose down"
   },
   "dependencies": {
     "@types/jest": "^26.0.24",

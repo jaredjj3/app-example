@@ -12,6 +12,7 @@ services:
 
   test:
     container_name: test
+    build: .
     image: app-example:latest
     volumes:
       - ./src:/app/src
