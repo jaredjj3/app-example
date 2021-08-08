@@ -3,6 +3,8 @@
   "license": "MIT",
   "scripts": {
     "build": "docker-compose build",
+    "migrate": "yarn mikro-orm migration:up",
+    "pretest": "yarn migrate",
     "test": "yarn jest --runInBand --watchAll",
     "prestart": "yarn build",
     "start": "docker-compose run --rm test",
