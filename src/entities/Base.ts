@@ -6,7 +6,8 @@ export class ValidationError extends Error {
 
   constructor(details: string[]) {
     const plural = details.length > 0;
-    super(`validation ${plural ? 'errors' : 'error'}: ${details.join(', ')}`);
+    const humanReadableDetails = details.map((detail) => `\t${detail}`).join('\n');
+    super(`validation ${plural ? 'errors' : 'error'}:\n${humanReadableDetails}`);
     this.details = details;
   }
 }

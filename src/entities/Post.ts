@@ -7,8 +7,9 @@ import {
   OneToMany,
   PrimaryKey,
   Property,
+  wrap,
 } from '@mikro-orm/core';
-import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import { MaxLength, MinLength } from 'class-validator';
 import { Base } from './Base';
 import { PostTag } from './PostTag';
 import { Tag } from './Tag';
@@ -25,8 +26,17 @@ export class Post extends Base {
   title!: string;
 
   @ManyToOne(() => User, { wrappedReference: true })
-  @IsNotEmpty()
   author?: IdentifiedReference<User, 'id'>;
+
+  @ManyToOne(() => User, { fieldName: 'author_id', mapToPk: true, persist: false })
+  get authorId() {
+    return this.author?.id;
+  }
+
+  set authorId(authorId: number) {
+    const author = wrap(new User({ id: authorId }));
+    this.author = author.toReference();
+  }
 
   @OneToMany(() => PostTag, (postTag) => postTag.post)
   postTags = new Collection<PostTag>(this);

@@ -1,4 +1,4 @@
-import { EntityManager, wrap } from '@mikro-orm/core';
+import { EntityManager, LoadStrategy, wrap } from '@mikro-orm/core';
 import { Db } from './Db';
 import { Post, User } from './entities';
 import { ValidationError } from './entities/Base';
@@ -92,6 +92,28 @@ describe('mikro-orm', () => {
       await expect(em.count(User)).resolves.toBe(1);
       expect(post.author.getEntity()).toBe(user);
       expect(user.posts.contains(post)).toBeTrue();
+    });
+
+    it('allows association using the foreign key', async () => {
+      // Create a new user and clear cache to simulate a "clean slate".
+      const user = new User({ username: rand.str(8) });
+      em.persist(user);
+      await em.flush();
+      em.clear();
+
+      const post = new Post({ authorId: user.id });
+      em.persist(post);
+      await em.flush();
+      em.clear();
+
+      await expect(em.count(Post)).resolves.toBe(1);
+      await expect(em.count(User)).resolves.toBe(1);
+
+      const actualPost = await em.findOne(Post, { authorId: user.id }, { populate: { author: LoadStrategy.JOINED } });
+      expect(actualPost).not.toBeNull();
+      expect(actualPost!.author).toBeDefined();
+      expect(actualPost!.author!.id).toBe(user.id);
+      expect(actualPost!.authorId).toBe(user.id);
     });
 
     it('disallows creating with invalid relationships', async () => {
