@@ -1,13 +1,17 @@
 {
+  "name": "app-example",
   "license": "MIT",
   "scripts": {
     "build": "docker-compose build",
     "pretest": "yarn build",
     "test": "docker-compose run --name test --rm test",
     "posttest": "yarn stop",
-    "stop": "docker-compose down"
+    "stop": "docker-compose down",
+    "bash": "docker-compose run --name test --rm test bash"
   },
   "dependencies": {
+    "@mikro-orm/cli": "^4.5.7",
+    "@mikro-orm/core": "^4.5.7",
     "@mikro-orm/postgresql": "^4.5.7",
     "@types/jest": "^26.0.24",
     "@typescript-eslint/eslint-plugin": "^4.29.0",
@@ -16,10 +20,16 @@
     "eslint-config-prettier": "^8.3.0",
     "jest": "^27.0.6",
     "jest-extended": "^0.11.5",
-    "mikro-orm": "^4.5.7",
     "prettier": "^2.3.2",
     "prettier-plugin-organize-imports": "^2.3.3",
     "ts-jest": "^27.0.4",
+    "ts-node": "^10.1.0",
     "typescript": "^4.3.5"
+  },
+  "mikro-orm": {
+    "useTsNode": true,
+    "configPaths": [
+      "./src/mikro-orm.config.ts"
+    ]
   }
 }

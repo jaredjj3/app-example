@@ -1,17 +1,18 @@
-import { MikroORM, UnderscoreNamingStrategy } from 'mikro-orm';
+import { MikroORM } from '@mikro-orm/core';
+import { config } from './mikro-orm.config';
 
 export class Db {
-  private static instanceRef: Db | undefined;
+  private static _instance: Db | undefined;
 
   static get instance() {
-    if (typeof Db.instanceRef === 'undefined') {
-      this.instanceRef = new Db();
+    if (typeof Db._instance === 'undefined') {
+      this._instance = new Db();
     }
-    return this.instanceRef;
+    return this._instance;
   }
 
   private isConnected = false;
-  private ormRef: MikroORM;
+  private _orm: MikroORM;
 
   private constructor() {}
 
@@ -19,28 +20,15 @@ export class Db {
     if (this.isConnected) {
       return;
     }
-    this.ormRef = await MikroORM.init({
-      type: 'postgresql',
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT),
-      dbName: process.env.DB_NAME,
-      user: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      namingStrategy: UnderscoreNamingStrategy,
-      entities: [],
-      discovery: {
-        requireEntitiesArray: false,
-        warnWhenNoEntities: false,
-      },
-    });
+    this._orm = await MikroORM.init(config);
     this.isConnected = true;
   }
 
   get orm(): MikroORM {
-    if (typeof this.ormRef === 'undefined') {
+    if (typeof this._orm === 'undefined') {
       throw new Error('must call Db.init before accessing Db.orm');
     }
-    return this.ormRef;
+    return this._orm;
   }
 
   async close() {
