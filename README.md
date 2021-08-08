@@ -21,7 +21,7 @@ yarn start
 
 Jest will detect any file change events in the src directory, and rerun the tests if idle.
 
-To quit out of the tests, you can press `q` (or as the Jest prompt suggests) or by pressing `Ctrl+C`.
+To quit out of the tests, you can press `q` (as the Jest prompt suggests) or by pressing `Ctrl+C`.
 
 ## Debugging
 
