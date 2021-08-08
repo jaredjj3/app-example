@@ -23,9 +23,9 @@ Jest will detect any file change events in the src directory, and rerun the test
 
 To quit out of the tests, you can press `q` (or as the Jest prompt suggests) or by pressing `Ctrl+C`.
 
-## Debugging Container
+## Debugging
 
-If you just want to run bash inside of the test container, just run:
+If you just want to run `bash` inside of the test container, just run:
 
 ```
 yarn debug
@@ -46,13 +46,13 @@ This example uses a classic relational example that encompasses all types of rel
 
 The relationships between the entities are:
 
-- A `User` has many `posts` (`Post`)
-- A `Post` belongs to an `author` (`User`)
-- A `Post` has many `postTags` (`PostTag`)
-- A `Post` has many `tags` (`Tag`) through `postTags` (`PostTag`)
-- A `PostTag` belongs to a `post` (`Post`)
-- A `PostTag` belongs to a `tag` (`Tag`)
-- A `Tag` has many `postTags` (`PostTag`)
-- A `Tag` has many `posts` (`Post`) through `postTags` (`PostTag`)
+- A `user` has many `posts`
+- A `post` belongs to an `author` (`User`)
+- A `post` has many `postTags`
+- A `post` has many `tags` through `postTags`
+- A `postTag` belongs to a `post`
+- A `postTag` belongs to a `tag`
+- A `tag` has many `postTags`
+- A `tag` has many `posts` through `postTags`
 
 It is encouraged to leverage these already-existing relationships instead of trying to replicate your schema directly.
