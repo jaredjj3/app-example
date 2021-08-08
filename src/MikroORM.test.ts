@@ -132,16 +132,15 @@ describe('mikro-orm', () => {
       await expect(em.count(Post)).resolves.toBe(1);
       await expect(em.count(User)).resolves.toBe(1);
 
-      // Assert that we have a brand new post entity.
       const actualPost = await em.findOne(Post, { authorId: user.id }, { populate: { author: LoadStrategy.JOINED } });
       expect(actualPost).not.toBeNull();
 
       // Assert that we can load the author association and it doesn't trigger
       // a database call since it was joined.
-      const prevNumDbCalls = getNumDbCalls();
+      const preNumDbCalls = getNumDbCalls();
       await expect(actualPost!.author.load()).resolves.not.toThrow();
-      const currNumDbCalls = getNumDbCalls();
-      expect(currNumDbCalls - prevNumDbCalls).toBe(0);
+      const postNumDbCalls = getNumDbCalls();
+      expect(postNumDbCalls - preNumDbCalls).toBe(0);
     });
 
     it('can load an association made by a foreign key without refreshing', async () => {
@@ -155,16 +154,15 @@ describe('mikro-orm', () => {
       em.persist(post);
       await em.flush();
 
-      // Assert that we have a brand new post entity.
       const actualPost = await em.findOne(Post, { authorId: user.id }, { populate: { author: LoadStrategy.JOINED } });
       expect(actualPost).not.toBeNull();
 
       // Assert that we can load the author association and it doesn't trigger
       // a database call since it was joined.
-      const prevNumDbCalls = getNumDbCalls();
+      const preNumDbCalls = getNumDbCalls();
       await expect(actualPost!.author.load()).resolves.not.toThrow();
-      const currNumDbCalls = getNumDbCalls();
-      expect(currNumDbCalls - prevNumDbCalls).toBe(0);
+      const postNumDbCalls = getNumDbCalls();
+      expect(postNumDbCalls - preNumDbCalls).toBe(0);
     });
 
     it('can load an association made by a foreign key with refreshing', async () => {
@@ -178,7 +176,6 @@ describe('mikro-orm', () => {
       em.persist(post);
       await em.flush();
 
-      // Assert that we have a brand new post entity.
       const actualPost = await em.findOne(
         Post,
         { authorId: user.id },
@@ -188,10 +185,10 @@ describe('mikro-orm', () => {
 
       // Assert that we can load the author association and it doesn't trigger
       // a database call since it was joined.
-      const prevNumDbCalls = getNumDbCalls();
+      const preNumDbCalls = getNumDbCalls();
       await expect(actualPost!.author.load()).resolves.not.toThrow();
-      const currNumDbCalls = getNumDbCalls();
-      expect(currNumDbCalls - prevNumDbCalls).toBe(0);
+      const postNumDbCalls = getNumDbCalls();
+      expect(postNumDbCalls - preNumDbCalls).toBe(0);
     });
 
     it('disallows creating with invalid relationships', async () => {
