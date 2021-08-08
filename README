@@ -35,6 +35,8 @@ Inside the container, you will have access to the MikrORM CLI via `yarn mikro-or
 
 ## Schema
 
+[Main migration file](src/migrations/Migration20210808014510.ts)
+
 This example uses a classic relational example that encompasses all types of relationships. There are 4 entities:
 
 - `User`
