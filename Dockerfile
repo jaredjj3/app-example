@@ -7,6 +7,7 @@ COPY yarn.lock .
 RUN yarn
 
 COPY tsconfig.json .
+COPY jest.config.js .
 COPY src src
 
 CMD [ "yarn", "jest", "--watchAll" ]
