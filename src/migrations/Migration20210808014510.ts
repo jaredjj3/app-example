@@ -11,7 +11,6 @@ CREATE TABLE users (
 CREATE TABLE posts (
   id SERIAL PRIMARY KEY,
   title TEXT NOT NULL,
-  body TEXT NOT NULL,
   author_id integer REFERENCES users (id)
 );
 
