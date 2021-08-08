@@ -1,7 +1,6 @@
 import { EntityManager, LoadStrategy, wrap } from '@mikro-orm/core';
 import { Db } from './Db';
-import { Post, User } from './entities';
-import { ValidationError } from './entities/Base';
+import { Post, User, ValidationError } from './entities';
 import * as rand from './testing/rand';
 
 describe('mikro-orm', () => {
