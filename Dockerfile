@@ -10,4 +10,4 @@ COPY tsconfig.json .
 COPY jest.config.js .
 COPY src src
 
-CMD [ "yarn", "jest", "--watchAll" ]
+CMD [ "yarn", "test" ]

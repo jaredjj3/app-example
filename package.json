@@ -3,11 +3,14 @@
   "license": "MIT",
   "scripts": {
     "build": "docker-compose build",
-    "pretest": "yarn build",
-    "test": "docker-compose run --name test --rm test",
-    "posttest": "yarn stop",
+    "test": "yarn jest --runInBand --watchAll",
+    "prestart": "yarn build",
+    "start": "docker-compose run --rm test",
+    "poststart": "yarn stop",
     "stop": "docker-compose down",
-    "bash": "docker-compose run --name test --rm test bash"
+    "predebug": "yarn build",
+    "debug": "docker-compose run --rm test bash",
+    "postdebug": "yarn stop"
   },
   "dependencies": {
     "@mikro-orm/cli": "^4.5.7",

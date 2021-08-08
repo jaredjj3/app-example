@@ -8,8 +8,6 @@ module.exports = {
     '^.+\\.tsx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'js'],
-  globalSetup: '<rootDir>/src/testing/globalSetup.ts',
-  globalTeardown: '<rootDir>/src/testing/globalTeardown.ts',
   setupFilesAfterEnv: ['jest-extended', '<rootDir>/src/testing/jest.setup.ts'],
   resetModules: false,
   testPathIgnorePatterns: ['node_modules'],
