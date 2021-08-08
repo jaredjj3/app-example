@@ -1,7 +1,7 @@
 import { BeforeCreate, BeforeUpdate } from '@mikro-orm/core';
-import classValidator from 'class-validator';
+import { validate } from 'class-validator';
 
-class ValidationError extends Error {
+export class ValidationError extends Error {
   details: string[];
 
   constructor(details: string[]) {
@@ -12,14 +12,13 @@ class ValidationError extends Error {
 }
 
 export abstract class Base {
-  async errors(): Promise<string[]> {
-    const errors = await classValidator.validate(this, {
-      validationError: {
-        target: false,
-        value: false,
-      },
-    });
+  async isValid(): Promise<boolean> {
+    const errors = await this.errors();
+    return errors.length === 0;
+  }
 
+  async errors(): Promise<string[]> {
+    const errors = await validate(this);
     return errors.flatMap((error) => Object.values(error.constraints || []));
   }
 
