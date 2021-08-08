@@ -12,7 +12,8 @@ const HACK_ISSUE_2099_SYMBOL = Symbol('HACK_ISSUE_2099');
  *
  * Calling load
  *
- * To avoid this issue, prefer loading a referenced entity into memory, and then
+ * To avoid this issue, prefer loading a referenced entity into memory and assigning the
+ * reference directly.
  *
  * See https://github.com/mikro-orm/mikro-orm/issues/2099
  */
