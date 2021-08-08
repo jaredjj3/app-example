@@ -10,13 +10,13 @@ export class Db {
     return this.instanceRef;
   }
 
-  private didInit = false;
+  private isConnected = false;
   private ormRef: MikroORM;
 
   private constructor() {}
 
   async init() {
-    if (this.didInit) {
+    if (this.isConnected) {
       return;
     }
     this.ormRef = await MikroORM.init({
@@ -33,20 +33,21 @@ export class Db {
         warnWhenNoEntities: false,
       },
     });
-    this.didInit = true;
+    this.isConnected = true;
   }
 
   get orm(): MikroORM {
     if (typeof this.ormRef === 'undefined') {
-      throw new Error('must call Db.init before accessing orm');
+      throw new Error('must call Db.init before accessing Db.orm');
     }
     return this.ormRef;
   }
 
   async close() {
-    if (this.didInit) {
+    if (this.isConnected) {
       await this.orm.close(true);
     }
+    this.isConnected = false;
   }
 
   async cleanup() {

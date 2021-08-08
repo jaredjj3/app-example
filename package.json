@@ -8,12 +8,14 @@
     "stop": "docker-compose down"
   },
   "dependencies": {
+    "@mikro-orm/postgresql": "^4.5.7",
     "@types/jest": "^26.0.24",
     "@typescript-eslint/eslint-plugin": "^4.29.0",
     "@typescript-eslint/parser": "^4.29.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "jest": "^27.0.6",
+    "jest-extended": "^0.11.5",
     "mikro-orm": "^4.5.7",
     "prettier": "^2.3.2",
     "prettier-plugin-organize-imports": "^2.3.3",
