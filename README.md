@@ -13,7 +13,7 @@ In order to run the tests in this project, you must have:
 
 ## Running Tests
 
-Jest will run any tests in src/\*_/_.test.ts in a Docker container. To run the tests, simply run:
+Jest will run any tests in `src/**/*.test.ts` in a Docker container. To run the tests, simply run:
 
 ```
 yarn start
