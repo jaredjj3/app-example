@@ -7,9 +7,9 @@ import {
   OneToMany,
   PrimaryKey,
   Property,
-  wrap,
 } from '@mikro-orm/core';
 import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import { ForeignKey } from '../decorators/ForeignKey';
 import { Base, BaseOpts } from './Base';
 import { PostTag } from './PostTag';
 import { Tag } from './Tag';
@@ -30,19 +30,8 @@ export class Post extends Base {
   author?: IdentifiedReference<User, 'id'>;
 
   @Property({ persist: false })
-  get authorId() {
-    return this.author?.id;
-  }
-
-  set authorId(authorId: number) {
-    if (this.authorId === authorId) {
-      return;
-    }
-    if (!this.em) {
-      throw new Error('must assign EntityManager to assign by foreign key');
-    }
-    wrap(this).assign({ author: authorId }, { em: this.em });
-  }
+  @ForeignKey<Post, number>('author')
+  authorId!: number;
 
   @OneToMany(() => PostTag, (postTag) => postTag.post)
   postTags = new Collection<PostTag>(this);

@@ -99,7 +99,7 @@ describe('mikro-orm', () => {
       expect(user.posts.contains(post)).toBeTrue();
     });
 
-    it('allows association using the foreign key', async () => {
+    it('allows association using the foreign key with entity manager', async () => {
       // Create a new user and clear cache to simulate a "clean slate".
       const user = new User({ username: rand.str(8) });
       em.persist(user);
@@ -118,6 +118,15 @@ describe('mikro-orm', () => {
       expect(actualPost!.author).toBeDefined();
       expect(actualPost!.author!.id).toBe(user.id);
       expect(actualPost!.authorId).toBe(user.id);
+    });
+
+    it('disallows association using the foreign key without entity manager', async () => {
+      const user = new User({ username: rand.str(8) });
+      em.persist(user);
+      await em.flush();
+      em.clear();
+
+      expect(() => new Post({ title: rand.str(8), authorId: user.id })).toThrowError();
     });
 
     it('can load an association made by a reference', async () => {
