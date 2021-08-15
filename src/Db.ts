@@ -1,5 +1,4 @@
 import { EntityManager, MikroORM } from '@mikro-orm/core';
-import { Post, PostTag, Tag, User } from './entities';
 import { config } from './mikro-orm.config';
 
 export class Db {
@@ -44,10 +43,8 @@ export class Db {
   }
 
   async cleanup() {
-    await this.orm.em.nativeDelete(Tag, {});
-    await this.orm.em.nativeDelete(Post, {});
-    await this.orm.em.nativeDelete(User, {});
-    await this.orm.em.nativeDelete(PostTag, {});
+    const connection = this.orm.em.getConnection();
+    await connection.execute(`TRUNCATE TABLE users, posts, post_tags, tags RESTART IDENTITY`);
     this.orm.em.clear();
   }
 }
