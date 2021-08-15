@@ -106,7 +106,7 @@ describe('mikro-orm', () => {
       await em.flush();
       em.clear();
 
-      const post = new Post({ title: rand.str(8), authorId: user.id });
+      const post = new Post({ title: rand.str(8), authorId: user.id }, { em });
       em.persist(post);
       await em.flush();
 
@@ -150,7 +150,7 @@ describe('mikro-orm', () => {
       await em.flush();
       em.clear();
 
-      const post = new Post({ title: rand.str(8), authorId: user.id });
+      const post = new Post({ title: rand.str(8), authorId: user.id }, { em });
       em.persist(post);
       await em.flush();
 
@@ -172,7 +172,7 @@ describe('mikro-orm', () => {
       await em.flush();
       em.clear();
 
-      const post = new Post({ title: rand.str(8), authorId: user.id });
+      const post = new Post({ title: rand.str(8), authorId: user.id }, { em });
       em.persist(post);
       await em.flush();
 

@@ -1,5 +1,9 @@
-import { BeforeCreate, BeforeUpdate } from '@mikro-orm/core';
+import { BeforeCreate, BeforeUpdate, EntityManager } from '@mikro-orm/core';
 import { validate } from 'class-validator';
+
+export type BaseOpts = {
+  em?: EntityManager;
+};
 
 export class ValidationError extends Error {
   details: string[];
@@ -13,6 +17,12 @@ export class ValidationError extends Error {
 }
 
 export abstract class Base {
+  em?: EntityManager;
+
+  constructor(opts: BaseOpts = {}) {
+    this.em = opts.em;
+  }
+
   async isValid(): Promise<boolean> {
     const errors = await this.errors();
     return errors.length === 0;

@@ -7,10 +7,10 @@ import {
   OneToMany,
   PrimaryKey,
   Property,
+  wrap,
 } from '@mikro-orm/core';
 import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
-import { createReferenceForDirectFkAssignment } from '../hacks/HACK_ISSUE_2099';
-import { Base } from './Base';
+import { Base, BaseOpts } from './Base';
 import { PostTag } from './PostTag';
 import { Tag } from './Tag';
 import { User } from './User';
@@ -35,8 +35,13 @@ export class Post extends Base {
   }
 
   set authorId(authorId: number) {
-    this.author =
-      this.author?.id === authorId ? this.author : createReferenceForDirectFkAssignment(new User({ id: authorId }));
+    if (this.authorId === authorId) {
+      return;
+    }
+    if (!this.em) {
+      throw new Error('must assign EntityManager to assign by foreign key');
+    }
+    wrap(this).assign({ author: authorId }, { em: this.em });
   }
 
   @OneToMany(() => PostTag, (postTag) => postTag.post)
@@ -45,8 +50,8 @@ export class Post extends Base {
   @ManyToMany({ entity: () => Tag, pivotTable: 'post_tags' })
   tags = new Collection<Tag>(this);
 
-  constructor(props: Partial<Post> = {}) {
-    super();
+  constructor(props: Partial<Post> = {}, opts: BaseOpts = {}) {
+    super(opts);
     Object.assign(this, props);
   }
 }
